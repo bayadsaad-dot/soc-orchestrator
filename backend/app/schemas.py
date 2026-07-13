@@ -37,3 +37,26 @@ class IncidentUpdate(BaseModel):
     severity: str
     status: str
     source: str
+
+class IOCCreate(BaseModel):
+    ioc_type: str
+    value: str
+    source: str
+
+
+class IOCResponse(BaseModel):
+    id: int
+    ioc_type: str
+    value: str
+    source: str
+    status: str
+
+    class Config:
+        from_attributes = True
+
+
+class IOCUpdate(BaseModel):
+    ioc_type: str
+    value: str
+    source: str
+    status: str    

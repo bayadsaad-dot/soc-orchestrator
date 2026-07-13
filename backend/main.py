@@ -1,6 +1,8 @@
 from fastapi import FastAPI  # type: ignore[import]
 from app.database.database import engine, Base
 from app.models.user import User
+from app.models.ioc import IOC
+from app.routers import iocs
 from app.routers import users
 from app.models.incident import Incident
 
@@ -17,6 +19,7 @@ app = FastAPI(
 
 app.include_router(users.router)
 app.include_router(incidents.router)
+app.include_router(iocs.router)
 
 @app.get("/")
 def home():
