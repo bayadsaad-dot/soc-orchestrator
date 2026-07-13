@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.services.virustotal import check_ioc
 from app.database.database import SessionLocal
 from app.models.ioc import IOC
 from app.schemas import (
@@ -110,3 +111,21 @@ def delete_ioc(
     return {
         "message": "IOC deleted successfully"
     }
+@router.get("/check/{ioc_id}")
+def check_ioc_in_virustotal(
+    ioc_id: int,
+    db: Session = Depends(get_db)
+):
+    ioc = db.query(IOC).filter(
+        IOC.id == ioc_id
+    ).first()
+
+    if not ioc:
+        raise HTTPException(
+            status_code=404,
+            detail="IOC not found"
+        )
+
+    result = check_ioc(ioc.value)
+
+    return result
