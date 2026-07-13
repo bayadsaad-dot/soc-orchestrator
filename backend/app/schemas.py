@@ -29,3 +29,11 @@ class IncidentResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class IncidentUpdate(BaseModel):
+    title: str
+    description: str
+    severity: str
+    status: str
+    source: str
