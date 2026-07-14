@@ -27,4 +27,23 @@ def check_ioc(value: str):
             "error": response.text
         }
 
-    return response.json()
+    data = response.json()
+
+    if not data.get("data"):
+        return {
+            "message": "IOC not found in VirusTotal"
+        }
+
+    ioc = data["data"][0]
+
+    stats = ioc["attributes"]["last_analysis_stats"]
+
+    return {
+        "ioc": value,
+        "type": ioc["type"],
+        "malicious": stats["malicious"],
+        "suspicious": stats["suspicious"],
+        "harmless": stats["harmless"],
+        "undetected": stats["undetected"],
+        "reputation": ioc["attributes"].get("reputation", 0)
+    }
