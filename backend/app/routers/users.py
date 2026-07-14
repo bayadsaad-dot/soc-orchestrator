@@ -91,3 +91,26 @@ def login(
         "access_token": access_token,
         "token_type": "bearer"
     }
+@router.put("/promote/{username}")
+def promote_user(
+    username: str,
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(
+        User.username == username
+    ).first()
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    user.role = "Admin"
+
+    db.commit()
+    db.refresh(user)
+
+    return {
+        "message": f"{user.username} promoted to Admin"
+    }

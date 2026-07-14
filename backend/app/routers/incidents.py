@@ -1,6 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.services.audit import log_action
+from app.auth.dependencies import (
+    get_current_user,
+    require_role
+)
 from app.database.database import SessionLocal
 from app.models.incident import Incident
 from app.schemas import (
@@ -8,6 +13,7 @@ from app.schemas import (
     IncidentResponse,
     IncidentUpdate
 )
+
 router = APIRouter(
     prefix="/incidents",
     tags=["Incidents"]
@@ -25,6 +31,7 @@ def get_db():
 @router.post("/", response_model=IncidentResponse)
 def create_incident(
     incident: IncidentCreate,
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     new_incident = Incident(
@@ -37,6 +44,13 @@ def create_incident(
     db.add(new_incident)
     db.commit()
     db.refresh(new_incident)
+
+    log_action(
+        db=db,
+        username=current_user["sub"],
+        action="CREATE_INCIDENT",
+        target=f"Incident #{new_incident.id}"
+    )
 
     return new_incident
 
@@ -66,10 +80,12 @@ def get_incident(
 
     return incident
 
+
 @router.put("/{incident_id}", response_model=IncidentResponse)
 def update_incident(
     incident_id: int,
     updated_incident: IncidentUpdate,
+    current_user: dict = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     incident = db.query(Incident).filter(
@@ -91,11 +107,20 @@ def update_incident(
     db.commit()
     db.refresh(incident)
 
+    log_action(
+        db=db,
+        username=current_user["sub"],
+        action="UPDATE_INCIDENT",
+        target=f"Incident #{incident.id}"
+    )
+
     return incident
+
 
 @router.delete("/{incident_id}")
 def delete_incident(
     incident_id: int,
+    current_user: dict = Depends(require_role("Admin")),
     db: Session = Depends(get_db)
 ):
     incident = db.query(Incident).filter(
@@ -108,8 +133,17 @@ def delete_incident(
             detail="Incident not found"
         )
 
+    deleted_id = incident.id
+
     db.delete(incident)
     db.commit()
+
+    log_action(
+        db=db,
+        username=current_user["sub"],
+        action="DELETE_INCIDENT",
+        target=f"Incident #{deleted_id}"
+    )
 
     return {
         "message": "Incident deleted successfully"
