@@ -65,3 +65,16 @@ def dashboard_stats(
         "low": low,
         "iocs": iocs
     }
+@router.get("/recent-incidents")
+def recent_incidents(
+    limit: int = 5,
+    db: Session = Depends(get_db)
+):
+    incidents = (
+        db.query(Incident)
+        .order_by(Incident.id.desc())
+        .limit(limit)
+        .all()
+    )
+
+    return incidents
