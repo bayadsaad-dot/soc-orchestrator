@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  soc-orchestrator:
+    build: .
+    container_name: soc-orchestrator
+
+    ports:
+      - "8000:8000"
+
+    env_file:
+      - .env
+
+    volumes:
+      - ./soc.db:/app/soc.db
+
+    restart: unless-stopped
