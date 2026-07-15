@@ -65,6 +65,8 @@ def get_ioc(
         )
 
     return ioc
+
+
 @router.put("/{ioc_id}", response_model=IOCResponse)
 def update_ioc(
     ioc_id: int,

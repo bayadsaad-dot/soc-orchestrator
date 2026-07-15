@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-
+from sqlalchemy import func
 from app.database.database import SessionLocal
 from app.models.user import User
 from app.models.incident import Incident
@@ -78,3 +78,45 @@ def recent_incidents(
     )
 
     return incidents
+@router.get("/severity-distribution")
+def severity_distribution(
+    db: Session = Depends(get_db)
+):
+    return {
+        "Critical": db.query(Incident).filter(
+            Incident.severity == "Critical"
+        ).count(),
+
+        "High": db.query(Incident).filter(
+            Incident.severity == "High"
+        ).count(),
+
+        "Medium": db.query(Incident).filter(
+            Incident.severity == "Medium"
+        ).count(),
+
+        "Low": db.query(Incident).filter(
+            Incident.severity == "Low"
+        ).count()
+    }
+@router.get("/top-sources")
+def top_sources(
+    db: Session = Depends(get_db)
+):
+    results = (
+        db.query(
+            Incident.source,
+            func.count(Incident.id).label("count")
+        )
+        .group_by(Incident.source)
+        .order_by(func.count(Incident.id).desc())
+        .all()
+    )
+
+    return [
+        {
+            "source": source,
+            "count": count
+        }
+        for source, count in results
+    ]

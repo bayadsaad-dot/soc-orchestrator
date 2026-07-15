@@ -8,13 +8,8 @@ class IOC(Base):
     __tablename__ = "iocs"
 
     id = Column(Integer, primary_key=True, index=True)
-
-    ioc_type = Column(String(50), nullable=False)
-
-    value = Column(String(255), nullable=False, unique=True)
-
-    source = Column(String(100), default="Manual")
-
-    status = Column(String(50), default="Unknown")
-
+    ioc_type = Column(String, nullable=False)
+    value = Column(String, unique=True, nullable=False)
+    source = Column(String, nullable=False)
+    status = Column(String, default="Active")
     created_at = Column(DateTime, default=datetime.utcnow)
