@@ -10,6 +10,14 @@ from app.routers import incidents
 from app.routers import iocs
 from app.routers import dashboard
 from app.models.audit import AuditLog
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
+from app.core.exceptions import (
+    http_exception_handler,
+    validation_exception_handler
+)
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -19,10 +27,16 @@ app = FastAPI(
     version="1.0"
 )
 
-app.include_router(users.router)
-app.include_router(dashboard.router)
-app.include_router(incidents.router)
-app.include_router(iocs.router)
+app.add_exception_handler(
+    StarletteHTTPException,
+    http_exception_handler
+)
+
+app.add_exception_handler(
+    RequestValidationError,
+    validation_exception_handler
+)
+
 app.include_router(users.router)
 app.include_router(dashboard.router)
 app.include_router(incidents.router)
