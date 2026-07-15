@@ -1,3 +1,8 @@
+![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
+![FastAPI](https://img.shields.io/badge/FastAPI-Framework-009688?logo=fastapi)
+![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Version](https://img.shields.io/badge/Version-v1.0.0-orange)
 # 🛡️ SOC Orchestrator
 
 Threat Intelligence & Security Operations Center (SOC) Automation Platform built with **FastAPI**.
@@ -76,6 +81,30 @@ It provides:
 
 ---
 
+## 🏗 Architecture
+
+```
+                +----------------------+
+                |      FastAPI API     |
+                +----------+-----------+
+                           |
+      +--------------------+-------------------+
+      |                    |                   |
++-----------+        +------------+      +------------+
+| Users     |        | Incidents  |      | IOCs       |
++-----------+        +------------+      +------------+
+      |                    |                   |
+      +--------------------+-------------------+
+                           |
+                   +---------------+
+                   |   SQLite DB   |
+                   +---------------+
+                           |
+                   +---------------+
+                   | VirusTotal API|
+                   +---------------+
+```
+
 ## 📂 Project Structure
 
 ```
@@ -119,6 +148,17 @@ docker compose up
 
 ---
 
+## 💡 Future Improvements
+
+- Multi-Tenant Support
+- SIEM Integration
+- Wazuh Integration
+- Splunk Integration
+- Microsoft Defender Integration
+- Slack Notifications
+- Email Alerts
+- Threat Intelligence Feeds
+
 ## 📖 API Documentation
 
 ```
@@ -136,6 +176,31 @@ v1.0.0
 ```
 
 ---
+
+## 🚀 Roadmap
+
+### Version 1.0 ✅
+
+- JWT Authentication
+- RBAC
+- Incident Management
+- IOC Management
+- Dashboard
+- Audit Logs
+- Docker
+
+### Version 2.0 🔄
+
+- PostgreSQL
+- Redis
+- Celery
+- Elasticsearch
+- Kibana
+- Email Notifications
+- PDF Reports
+- WebSocket Notifications
+- MITRE ATT&CK Mapping
+- Sigma Rule Support
 
 ## 👨‍💻 Author
 
