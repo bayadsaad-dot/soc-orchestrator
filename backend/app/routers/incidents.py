@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.services.audit import log_action
@@ -57,9 +57,40 @@ def create_incident(
 
 @router.get("/", response_model=list[IncidentResponse])
 def get_incidents(
+    severity: str | None = Query(None),
+    status: str | None = Query(None),
+    source: str | None = Query(None),
+    search: str | None = Query(None),
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
     db: Session = Depends(get_db)
 ):
-    incidents = db.query(Incident).all()
+    query = db.query(Incident)
+
+    if severity:
+        query = query.filter(
+            Incident.severity == severity
+        )
+
+    if status:
+        query = query.filter(
+            Incident.status == status
+        )
+
+    if source:
+        query = query.filter(
+            Incident.source == source
+        )
+
+    if search:
+        query = query.filter(
+            Incident.title.contains(search)
+        )
+
+    offset = (page - 1) * limit
+
+    incidents = query.offset(offset).limit(limit).all()
+
     return incidents
 
 
