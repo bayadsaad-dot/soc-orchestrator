@@ -49,7 +49,8 @@ def create_incident(
         db=db,
         username=current_user["sub"],
         action="CREATE_INCIDENT",
-        target=f"Incident #{new_incident.id}"
+        resource="Incident",
+        details=f"Created incident: {new_incident.title}"
     )
 
     return new_incident
@@ -142,7 +143,8 @@ def update_incident(
         db=db,
         username=current_user["sub"],
         action="UPDATE_INCIDENT",
-        target=f"Incident #{incident.id}"
+        resource="Incident",
+        details=f"Updated incident: {incident.title}"
     )
 
     return incident
@@ -173,7 +175,8 @@ def delete_incident(
         db=db,
         username=current_user["sub"],
         action="DELETE_INCIDENT",
-        target=f"Incident #{deleted_id}"
+        resource="Incident",
+        details=f"Deleted incident: {deleted_id}"
     )
 
     return {

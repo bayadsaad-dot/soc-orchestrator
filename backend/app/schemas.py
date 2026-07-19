@@ -79,6 +79,7 @@ class IOCType(str, Enum):
     DOMAIN = "Domain"
     URL = "URL"
     HASH = "Hash"
+    EMAIL = "Email"
 
 
 # ==========================

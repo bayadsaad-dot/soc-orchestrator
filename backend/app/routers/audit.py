@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.database.database import SessionLocal
-from app.models.audit import AuditLog
+from app.models.audit_log import AuditLog
 from app.auth.dependencies import require_role
 
 router = APIRouter(

@@ -1,20 +1,18 @@
-from sqlalchemy.orm import Session
-
 from app.models.audit_log import AuditLog
 
 
-def log_action(
-    db: Session,
-    username: str,
-    action: str,
-    resource: str,
-    details: str
+def create_audit_log(
+    db,
+    username,
+    action,
+    resource,
+    details=""
 ):
     log = AuditLog(
         username=username,
         action=action,
         resource=resource,
-        details=details
+        details=details,
     )
 
     db.add(log)

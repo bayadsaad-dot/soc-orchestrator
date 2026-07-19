@@ -9,11 +9,13 @@ class AuditLog(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    username = Column(String)
+    username = Column(String, nullable=False)
 
-    action = Column(String)
+    action = Column(String, nullable=False)
 
-    target = Column(String)
+    resource = Column(String, nullable=False)
+
+    details = Column(String)
 
     timestamp = Column(
         DateTime,

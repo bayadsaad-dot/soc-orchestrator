@@ -120,3 +120,24 @@ def top_sources(
         }
         for source, count in results
     ]
+@router.get("/ioc-types")
+def ioc_types(
+    db: Session = Depends(get_db)
+):
+    results = (
+        db.query(
+            IOC.ioc_type,
+            func.count(IOC.id).label("count")
+        )
+        .group_by(IOC.ioc_type)
+        .order_by(func.count(IOC.id).desc())
+        .all()
+    )
+
+    return [
+        {
+            "type": ioc_type,
+            "count": count
+        }
+        for ioc_type, count in results
+    ]

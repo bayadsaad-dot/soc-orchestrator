@@ -1,21 +1,22 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
-
 from app.database.database import Base, engine
 
 # Database Models
 from app.models.user import User
 from app.models.incident import Incident
 from app.models.ioc import IOC
-from app.models.audit import AuditLog
-
+from app.routers import audit
 # Routers
 from app.routers import users
 from app.routers import incidents
 from app.routers import iocs
 from app.routers import dashboard
 from app.routers import audit
+from app.routers import reports
+from app.routers import wazuh
 
 # Exception Handlers
 from app.core.exceptions import (
@@ -49,18 +50,15 @@ SOC Orchestrator is a Security Operations Center (SOC) platform built with FastA
 Built for cybersecurity learning and portfolio purposes.
 """,
     version="1.0.0",
-
     contact={
         "name": "Saad Byad",
         "url": "https://github.com/bayadsaad-dot/soc-orchestrator",
     },
-
     license_info={
         "name": "MIT License",
         "identifier": "MIT",
     },
     terms_of_service="https://github.com/bayadsaad-dot/soc-orchestrator",
-
     openapi_tags=[
         {
             "name": "Home",
@@ -86,7 +84,24 @@ Built for cybersecurity learning and portfolio purposes.
             "name": "Audit",
             "description": "Audit log operations."
         },
+        {
+            "name": "Reports",
+            "description": "Report generation and export."
+        }
     ],
+)
+
+# ==========================
+# CORS
+# ==========================
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Exception Handlers
@@ -106,7 +121,8 @@ app.include_router(incidents.router)
 app.include_router(iocs.router)
 app.include_router(dashboard.router)
 app.include_router(audit.router)
-
+app.include_router(reports.router)
+app.include_router(wazuh.router)
 
 @app.get(
     "/",
@@ -116,10 +132,9 @@ app.include_router(audit.router)
 )
 def home():
     return {
-     "application": "SOC Orchestrator",
-     "version": "1.0.0",
-     "status": "online",
-     "documentation": "/docs",
-     "openapi": "/openapi.json"
-}
-    
+        "application": "SOC Orchestrator",
+        "version": "1.0.0",
+        "status": "online",
+        "documentation": "/docs",
+        "openapi": "/openapi.json"
+    }
