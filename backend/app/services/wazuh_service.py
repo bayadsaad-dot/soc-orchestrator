@@ -105,3 +105,36 @@ class WazuhService:
         response.raise_for_status()
 
         return response.json()
+
+    def search_alerts(self, size=20):
+
+        url = f"{self.indexer_url}/wazuh-alerts-*/_search"
+
+        query = {
+            "size": size,
+            "sort": [
+                {
+                    "@timestamp": {
+                        "order": "desc"
+                    }
+                }
+            ],
+            "query": {
+                "match_all": {}
+            }
+        }
+
+        response = requests.post(
+            url,
+            auth=(
+                self.indexer_username,
+                self.indexer_password,
+            ),
+            json=query,
+            verify=False,
+            timeout=15,
+        )
+
+        response.raise_for_status()
+
+        return response.json()

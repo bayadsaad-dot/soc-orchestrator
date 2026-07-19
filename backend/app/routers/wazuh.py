@@ -1,5 +1,8 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
 
+from app.database.database import SessionLocal
+from app.models.incident import Incident
 from app.services.wazuh_service import WazuhService
 
 router = APIRouter(
@@ -8,7 +11,12 @@ router = APIRouter(
 )
 
 service = WazuhService()
-
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 @router.get("/status")
 def manager_status():
@@ -40,3 +48,89 @@ def indexer_connection():
         return service.test_indexer_connection()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/alerts")
+def alerts(size: int = 20):
+    try:
+        return service.search_alerts(size)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+
+@router.post("/sync")
+def sync_alerts(
+    db: Session = Depends(get_db)
+):
+    try:
+        data = service.search_alerts(100)
+
+        alerts = data["hits"]["hits"]
+
+        created = 0
+        skipped = 0
+
+        for alert in alerts:
+
+            source = alert.get("_source", {})
+
+            rule = source.get("rule", {})
+            agent = source.get("agent", {})
+
+            title = rule.get(
+                "description",
+                "Wazuh Alert"
+            )
+
+            description = source.get(
+                "full_log",
+                str(source)
+            )
+
+            level = int(
+                rule.get("level", 0)
+            )
+
+            if level >= 15:
+                severity = "Critical"
+            elif level >= 10:
+                severity = "High"
+            elif level >= 5:
+                severity = "Medium"
+            else:
+                severity = "Low"
+
+            existing = db.query(Incident).filter(
+                Incident.title == title,
+                Incident.description == description
+            ).first()
+
+            if existing:
+                skipped += 1
+                continue
+
+            incident = Incident(
+                title=title,
+                description=description,
+                severity=severity,
+                status="Open",
+                source="Wazuh"
+            )
+
+            db.add(incident)
+            created += 1
+
+        db.commit()
+
+        return {
+            "success": True,
+            "alerts_received": len(alerts),
+            "incidents_created": created,
+            "duplicates_skipped": skipped
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )    

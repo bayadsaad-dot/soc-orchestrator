@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.database.database import Base, engine
-
+from app.services.scheduler import scheduler
 # Database Models
 from app.models.user import User
 from app.models.incident import Incident
@@ -24,7 +24,7 @@ from app.core.exceptions import (
     validation_exception_handler
 )
 
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="SOC Orchestrator",
