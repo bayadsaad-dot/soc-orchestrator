@@ -34,18 +34,9 @@ def logs(limit: int = 10):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/sync")
-def sync_alerts():
-    """
-    Placeholder endpoint.
-    The alert synchronization logic will be added
-    after implementing get_alerts() in WazuhService.
-    """
+@router.get("/indexer")
+def indexer_connection():
     try:
-        return {
-            "success": True,
-            "message": "Wazuh synchronization endpoint is ready.",
-            "status": "Not implemented yet"
-        }
+        return service.test_indexer_connection()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

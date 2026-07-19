@@ -14,13 +14,17 @@ class WazuhService:
         self.username = settings.WAZUH_USERNAME
         self.password = settings.WAZUH_PASSWORD
 
-        # Cache JWT token
+        self.indexer_url = settings.WAZUH_INDEXER_URL
+        self.indexer_username = settings.WAZUH_INDEXER_USERNAME
+        self.indexer_password = settings.WAZUH_INDEXER_PASSWORD
+
+        # JWT Token Cache
         self.token = None
         self.token_expiry = None
 
     def authenticate(self):
 
-        # Reuse the current token if it's still valid
+        # Reuse the token if it is still valid
         if (
             self.token
             and self.token_expiry
@@ -39,7 +43,7 @@ class WazuhService:
 
         self.token = response.json()["data"]["token"]
 
-        # Refresh before the real expiration
+        # Refresh before expiration
         self.token_expiry = datetime.utcnow() + timedelta(minutes=14)
 
         return self.token
@@ -81,6 +85,19 @@ class WazuhService:
             f"{self.base_url}/manager/logs",
             params={"limit": limit},
             headers=self.get_headers(),
+            verify=False,
+            timeout=10,
+        )
+
+        response.raise_for_status()
+
+        return response.json()
+
+    def test_indexer_connection(self):
+
+        response = requests.get(
+            self.indexer_url,
+            auth=(self.indexer_username, self.indexer_password),
             verify=False,
             timeout=10,
         )
