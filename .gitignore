@@ -1,15 +1,41 @@
 # Python
 __pycache__/
-*.pyc
+*.py[cod]
 
-# Virtual Environment
+# Virtual environments
+venv/
 backend/venv/
 
-# SQLite Database
+# Environment variables
+backend/.env
+
+# Database
 backend/*.db
 
 # VS Code
 .vscode/
 
-# Environment Variables
+# OS
+.DS_Store
+Thumbs.db
+# Build
+dist/
+build/
+
+# Node
+node_modules/
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Environment
 .env
+.env.*
+
+# Logs
+*.log
+backend/soc.db
+*.db
