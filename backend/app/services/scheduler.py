@@ -58,8 +58,14 @@ def sync_wazuh():
                     title=title,
                     description=description,
                     severity=severity,
+                    priority=severity,
                     status="Open",
-                    source="Wazuh"
+                    source="Wazuh",
+                    assigned_to=None,
+                    due_date=None,
+                    resolution=None,
+                    
+                    
                 )
             )
 
@@ -74,5 +80,3 @@ scheduler.add_job(
     "interval",
     minutes=5,
 )
-
-scheduler.start()

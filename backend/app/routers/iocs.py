@@ -65,7 +65,8 @@ def create_ioc(
         db=db,
         username=current_user["sub"],
         action="CREATE_IOC",
-        target=f"IOC #{new_ioc.id}"
+        resource="IOC",
+        details=f"Created IOC #{new_ioc.id}"
     )
 
     return new_ioc
@@ -172,7 +173,8 @@ def update_ioc(
         db=db,
         username=current_user["sub"],
         action="UPDATE_IOC",
-        target=f"IOC #{ioc.id}"
+        resource="IOC",
+        details=f"Updated IOC #{ioc.id}"
     )
 
     return ioc
@@ -207,7 +209,8 @@ def delete_ioc(
         db=db,
         username=current_user["sub"],
         action="DELETE_IOC",
-        target=f"IOC #{deleted_id}"
+        resource="IOC",
+        details=f"Deleted IOC #{deleted_id}"
     )
 
     return {
@@ -241,7 +244,13 @@ def check_ioc_in_virustotal(
         db=db,
         username=current_user["sub"],
         action="CHECK_IOC",
-        target=f"IOC #{ioc.id}"
-    )
+        resource="IOC",
+        details=f"VirusTotal lookup for IOC #{ioc.id}"
+)
+    
+        
+        
+        
+    
 
     return result

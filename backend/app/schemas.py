@@ -1,4 +1,7 @@
 from enum import Enum
+from datetime import datetime
+from typing import Optional
+
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -41,25 +44,45 @@ class UserLogin(BaseModel):
 class IncidentCreate(BaseModel):
     title: str = Field(min_length=3, max_length=100)
     description: str = Field(min_length=5)
+
     severity: Severity
     source: str = Field(min_length=2, max_length=100)
+
+    priority: str = Field(default="Medium")
+    assigned_to: Optional[str] = None
+    due_date: Optional[datetime] = None
 
 
 class IncidentUpdate(BaseModel):
     title: str = Field(min_length=3, max_length=100)
     description: str = Field(min_length=5)
+
     severity: Severity
     status: IncidentStatus
     source: str = Field(min_length=2, max_length=100)
+
+    priority: str = Field(default="Medium")
+    assigned_to: Optional[str] = None
+    due_date: Optional[datetime] = None
+    resolution: Optional[str] = None
 
 
 class IncidentResponse(BaseModel):
     id: int
     title: str
     description: str
+
     severity: str
+    priority: str
+
     status: str
     source: str
+
+    assigned_to: Optional[str]
+    due_date: Optional[datetime]
+    resolution: Optional[str]
+
+    created_at: datetime
 
     class Config:
         from_attributes = True

@@ -2,13 +2,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
+
 from app.database.database import Base, engine
 from app.services.scheduler import scheduler
+
 # Database Models
 from app.models.user import User
 from app.models.incident import Incident
 from app.models.ioc import IOC
-from app.routers import audit
+
 # Routers
 from app.routers import users
 from app.routers import incidents
@@ -104,7 +106,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ==========================
 # Exception Handlers
+# ==========================
 app.add_exception_handler(
     StarletteHTTPException,
     http_exception_handler
@@ -115,7 +119,9 @@ app.add_exception_handler(
     validation_exception_handler
 )
 
+# ==========================
 # Routers
+# ==========================
 app.include_router(users.router)
 app.include_router(incidents.router)
 app.include_router(iocs.router)
@@ -124,6 +130,24 @@ app.include_router(audit.router)
 app.include_router(reports.router)
 app.include_router(wazuh.router)
 
+# ==========================
+# Scheduler
+# ==========================
+@app.on_event("startup")
+def startup_event():
+    if not scheduler.running:
+        scheduler.start()
+        print("Scheduler started successfully.")
+
+@app.on_event("shutdown")
+def shutdown_event():
+    if scheduler.running:
+        scheduler.shutdown()
+        print("Scheduler stopped.")
+
+# ==========================
+# Home
+# ==========================
 @app.get(
     "/",
     tags=["Home"],

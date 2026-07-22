@@ -1,6 +1,43 @@
-version: "3.9"
-
 services:
+  db:
+    image: postgres:17
+    container_name: soc-postgres
+
+    environment:
+      POSTGRES_DB: soc_orchestrator
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Winners2005+$
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d soc_orchestrator"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: soc-pgadmin
+
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+
+    ports:
+      - "5050:80"
+
+    depends_on:
+      - db
+
+    restart: unless-stopped
+
   soc-orchestrator:
     build: .
     container_name: soc-orchestrator
@@ -11,7 +48,20 @@ services:
     env_file:
       - .env
 
-    volumes:
-      - ./soc.db:/app/soc.db
+    environment:
+      DATABASE_URL: postgresql://postgres:Winners2005+$@db:5432/soc_orchestrator
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    command: >
+      sh -c "
+      alembic upgrade head &&
+      uvicorn main:app --host 0.0.0.0 --port 8000
+      "
 
     restart: unless-stopped
+
+volumes:
+  postgres_data:
