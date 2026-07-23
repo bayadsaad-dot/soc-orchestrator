@@ -26,7 +26,7 @@ from app.core.exceptions import (
     validation_exception_handler
 )
 
-# Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="SOC Orchestrator",
@@ -100,6 +100,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
+        "https://soc-orchestrator-frontend.onrender.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
