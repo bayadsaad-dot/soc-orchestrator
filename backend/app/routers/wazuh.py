@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.database.database import SessionLocal
 from app.models.incident import Incident
 from app.services.wazuh_service import WazuhService
-
+from app.core.config import settings
 router = APIRouter(
     prefix="/wazuh",
     tags=["Wazuh"],
@@ -134,3 +134,13 @@ def sync_alerts(
             status_code=500,
             detail=str(e)
         )    
+@router.get("/debug/wazuh-config")
+def debug_wazuh_config():
+    return {
+        "api_url": settings.WAZUH_API_URL,
+        "username": settings.WAZUH_USERNAME,
+        "password_exists": settings.WAZUH_PASSWORD is not None,
+        "indexer_url": settings.WAZUH_INDEXER_URL,
+        "indexer_username": settings.WAZUH_INDEXER_USERNAME,
+        "indexer_password_exists": settings.WAZUH_INDEXER_PASSWORD is not None,
+    }    
