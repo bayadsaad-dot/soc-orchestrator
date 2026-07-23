@@ -324,3 +324,17 @@ def delete_user(
     return {
         "message": f"User '{username}' deleted successfully"
     }
+  # ==========================
+  # DEBUG (Temporary)
+  # ==========================
+@router.get("/debug/users")
+def debug_users(db: Session = Depends(get_db)):
+    users = db.query(User).all()
+
+    return [
+        {
+            "username": u.username,
+            "role": u.role,
+        }
+        for u in users
+    ]
