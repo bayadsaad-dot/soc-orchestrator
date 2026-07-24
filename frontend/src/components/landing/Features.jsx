@@ -1,10 +1,10 @@
 import {
   Shield,
-  Globe,
   Activity,
-  BarChart3,
-  Lock,
   FileText,
+  BarChart3,
+  Database,
+  Lock,
 } from "lucide-react";
 
 const features = [
@@ -12,84 +12,85 @@ const features = [
     icon: Shield,
     title: "Incident Management",
     description:
-      "Create, assign, investigate and resolve security incidents efficiently.",
+      "Create, assign, track and resolve security incidents through a centralized workflow.",
   },
   {
-    icon: Globe,
+    icon: Database,
     title: "IOC Management",
     description:
-      "Manage IPs, Domains and File Hashes from one centralized platform.",
+      "Store and manage malicious IPs, domains, hashes and URLs from a single dashboard.",
   },
   {
     icon: Activity,
     title: "Threat Intelligence",
     description:
-      "Enrich indicators using VirusTotal and external threat intelligence.",
+      "Integrate VirusTotal and Wazuh to enrich investigations with actionable intelligence.",
   },
   {
     icon: BarChart3,
-    title: "Interactive Dashboard",
+    title: "Security Dashboard",
     description:
-      "Visualize incidents, alerts and security metrics in real time.",
+      "Visualize incidents, alerts and security metrics with real-time dashboards.",
+  },
+  {
+    icon: FileText,
+    title: "PDF Reports",
+    description:
+      "Generate professional incident reports for auditing and compliance.",
   },
   {
     icon: Lock,
     title: "Role-Based Access",
     description:
-      "Secure authentication with JWT and RBAC permissions.",
-  },
-  {
-    icon: FileText,
-    title: "Professional Reports",
-    description:
-      "Generate PDF reports ready for SOC teams and management.",
+      "Protect the platform using JWT authentication and Role-Based Access Control.",
   },
 ];
 
 export default function Features() {
   return (
-    <section className="py-24 bg-gray-900">
-
+    <section
+      id="features"
+      className="bg-gray-950 py-24"
+    >
       <div className="max-w-7xl mx-auto px-6">
 
-        <h2 className="text-4xl font-bold text-center mb-4">
-          Platform Features
-        </h2>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-white">
+            Enterprise Security Features
+          </h2>
 
-        <p className="text-gray-400 text-center max-w-2xl mx-auto mb-16">
-          Everything you need to manage incidents and security operations
-          from one modern platform.
-        </p>
+          <p className="mt-4 text-gray-400 max-w-2xl mx-auto">
+            Everything needed to manage incidents, investigate threats and
+            streamline SOC operations from one modern platform.
+          </p>
+        </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-          {features.map((feature) => {
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {features.map((feature, index) => {
             const Icon = feature.icon;
 
             return (
               <div
-                key={feature.title}
-                className="bg-gray-950 border border-gray-800 rounded-2xl p-8 hover:border-blue-500 hover:-translate-y-2 transition-all duration-300"
+                key={index}
+                className="group rounded-2xl border border-gray-800 bg-gray-900/60 p-8 transition duration-300 hover:-translate-y-2 hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/10"
               >
                 <div className="w-14 h-14 rounded-xl bg-blue-600/20 flex items-center justify-center mb-6">
-                  <Icon size={28} className="text-blue-500" />
+                  <Icon className="text-blue-400" size={28} />
                 </div>
 
-                <h3 className="text-xl font-semibold mb-3">
+                <h3 className="text-xl font-semibold text-white mb-3">
                   {feature.title}
                 </h3>
 
-                <p className="text-gray-400">
+                <p className="text-gray-400 leading-7">
                   {feature.description}
                 </p>
               </div>
             );
           })}
-
         </div>
 
       </div>
-
     </section>
   );
 }
