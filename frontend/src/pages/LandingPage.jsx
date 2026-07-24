@@ -5,10 +5,13 @@ import TechStack from "../components/landing/TechStack";
 import Stats from "../components/landing/Stats";
 import CTA from "../components/landing/CTA";
 import Footer from "../components/landing/Footer";
+import Background from "../components/landing/Background";
 
 export default function LandingPage() {
   return (
     <div className="bg-gray-950 text-white overflow-x-hidden">
+      <Background />
+      
       <Navbar />
       <Hero />
       <Features />
