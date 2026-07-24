@@ -1,6 +1,7 @@
 import ThreatDashboard from "../pages/ThreatDashboard";
 import IOCDetails from "../pages/IOCDetails";
 import LandingPage from "../pages/LandingPage";
+
 import {
   BrowserRouter,
   Routes,
@@ -9,6 +10,7 @@ import {
 
 import Reports from "../pages/Reports";
 import Login from "../pages/Login";
+import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 
 import Incidents from "../pages/Incidents";
@@ -30,15 +32,24 @@ export default function AppRouter() {
     <BrowserRouter>
       <Routes>
 
+        {/* Public Routes */}
         <Route
           path="/"
           element={<LandingPage />}
         />
+
         <Route
           path="/login"
           element={<Login />}
         />
-        
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
+
+        {/* Protected Routes */}
+
         <Route
           path="/dashboard"
           element={
