@@ -47,7 +47,7 @@ export default function Hero() {
             <div className="mt-10 flex flex-wrap gap-4">
 
               <Link
-                to="/login"
+                to="/register"
                 className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700"
               >
                 Get Started
