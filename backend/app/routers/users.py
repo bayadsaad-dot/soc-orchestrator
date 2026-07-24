@@ -324,40 +324,4 @@ def delete_user(
     return {
         "message": f"User '{username}' deleted successfully"
     }
-  # ==========================
-  # DEBUG (Temporary)
-  # ==========================
-@router.get("/debug/users")
-def debug_users(db: Session = Depends(get_db)):
-    users = db.query(User).all()
-
-    return [
-        {
-            "username": u.username,
-            "role": u.role,
-        }
-        for u in users
-    ]
-@router.put("/debug/promote/{username}")
-def debug_promote(
-    username: str,
-    db: Session = Depends(get_db)
-):
-    user = db.query(User).filter(
-        User.username == username
-    ).first()
-
-    if not user:
-        raise HTTPException(
-            status_code=404,
-            detail="User not found"
-        )
-
-    user.role = "Admin"
-    db.commit()
-    db.refresh(user)
-
-    return {
-        "username": user.username,
-        "role": user.role
-    }
+ 

@@ -26,7 +26,7 @@ from app.core.exceptions import (
     validation_exception_handler
 )
 
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="SOC Orchestrator",
