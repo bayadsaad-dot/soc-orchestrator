@@ -1,3 +1,4 @@
+![Uploading soc-orchestrator-banner.png.png…]()
 <p align="center">
   <img src="assets/soc-orchestrator-banner.png" alt="SOC Orchestrator Banner" width="100%">
 </p>
