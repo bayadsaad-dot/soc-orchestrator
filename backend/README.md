@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="assets/soc-orchestrator-banner.png" alt="SOC Orchestrator Banner" width="100%">
+</p>
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Framework-009688?logo=fastapi)
 ![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker)
